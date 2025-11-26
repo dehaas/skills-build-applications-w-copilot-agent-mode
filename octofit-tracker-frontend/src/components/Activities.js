@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);
-  const codespace = process.env.REACT_APP_CODESPACE_NAME || '';
-  const endpoint = codespace ? `https://${codespace}-8000.app.github.dev/api/activities/` : 'http://localhost:8000/api/activities/';
+  const apiBase = process.env.REACT_APP_API_BASE || 'http://localhost:8000/api';
+  const endpoint = `${apiBase}/activities/`;
 
   useEffect(() => {
     fetch(endpoint)
