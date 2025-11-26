@@ -16,8 +16,38 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers, viewsets
+from .models import User, Team, Activity, Workout, Leaderboard
+from .serializers import UserSerializer, TeamSerializer, ActivitySerializer, WorkoutSerializer, LeaderboardSerializer
 from django.http import JsonResponse
 import os
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class TeamViewSet(viewsets.ModelViewSet):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+class ActivityViewSet(viewsets.ModelViewSet):
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+
+class WorkoutViewSet(viewsets.ModelViewSet):
+    queryset = Workout.objects.all()
+    serializer_class = WorkoutSerializer
+
+class LeaderboardViewSet(viewsets.ModelViewSet):
+    queryset = Leaderboard.objects.all()
+    serializer_class = LeaderboardSerializer
+
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'teams', TeamViewSet)
+router.register(r'activities', ActivityViewSet)
+router.register(r'workouts', WorkoutViewSet)
+router.register(r'leaderboard', LeaderboardViewSet)
 
 def api_root(request):
     codespace_name = os.environ.get('CODESPACE_NAME', '')
@@ -33,10 +63,5 @@ def api_root(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api_root'),
-    # Add endpoints for each component (assuming DRF routers or views are set up)
-    # path('api/users/', include('octofit_tracker.users.urls')),
-    # path('api/teams/', include('octofit_tracker.teams.urls')),
-    # path('api/activities/', include('octofit_tracker.activities.urls')),
-    # path('api/workouts/', include('octofit_tracker.workouts.urls')),
-    # path('api/leaderboard/', include('octofit_tracker.leaderboard.urls')),
+    path('api/', include(router.urls)),
 ]
